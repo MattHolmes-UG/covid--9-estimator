@@ -19,7 +19,6 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
   const { region, timeToElapse } = data;
   const { avgDailyIncomeInUSD, avgDailyIncomePopulation } = region;
   const totalEstimate = parseInt(infectionCases * avgDailyIncomePopulation * avgDailyIncomeInUSD);
-  console.log('totalEstimate', totalEstimate);
   const dailyLossEstimate = parseInt(totalEstimate / timeToElapse);
   return dailyLossEstimate;
 };
