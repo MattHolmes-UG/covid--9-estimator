@@ -24,19 +24,19 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
 };
 
 const estimateICUandVentilatorsImpact = (infectionsByRequestedTime, periodType) => {
-  let casesForICUByRequestedTime; let casesForVentilatorsByRequestedTime;
-  if (periodType === 'days') {
-    casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
-    casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
-  }
-  if (periodType === 'weeks') {
-    casesForICUByRequestedTime = parseInt((infectionsByRequestedTime * 0.05) / 7);
-    casesForVentilatorsByRequestedTime = parseInt((infectionsByRequestedTime * 0.02) / 7);
-  }
-  if (periodType === 'months') {
-    casesForICUByRequestedTime = parseInt((infectionsByRequestedTime * 0.05) / 30);
-    casesForVentilatorsByRequestedTime = parseInt((infectionsByRequestedTime * 0.02) / 30);
-  }
+  // let casesForICUByRequestedTime; let casesForVentilatorsByRequestedTime;
+  // if (periodType === 'days') {
+  const casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
+  const casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
+  // }
+  // if (periodType === 'weeks') {
+  //   casesForICUByRequestedTime = parseInt((infectionsByRequestedTime * 0.05) / 7);
+  //   casesForVentilatorsByRequestedTime = parseInt((infectionsByRequestedTime * 0.02) / 7);
+  // }
+  // if (periodType === 'months') {
+  //   casesForICUByRequestedTime = parseInt((infectionsByRequestedTime * 0.05) / 30);
+  //   casesForVentilatorsByRequestedTime = parseInt((infectionsByRequestedTime * 0.02) / 30);
+  // }
   return {
     casesForICUByRequestedTime,
     casesForVentilatorsByRequestedTime
