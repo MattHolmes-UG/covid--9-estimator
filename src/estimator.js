@@ -43,13 +43,13 @@ const estimateImpact = (data, typeOfImpact) => {
   let casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
   let casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
   if (periodType === 'weeks') {
-    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 7) * 7;
-    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 7) * 7;
+    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime * 7) / 7;
+    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime * 7) / 7;
     // console.log('for weeks', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
   }
   if (periodType === 'months') {
-    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 30) * 30;
-    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 30) * 30;
+    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime * 30) / 30;
+    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime * 30) / 30;
     // console.log('for months', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
   }
   // gradr seems to be working with * 7 and 30
