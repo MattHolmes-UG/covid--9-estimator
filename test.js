@@ -22,22 +22,19 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
   return dailyLossEstimate;
 };
 
-const estimateICUandVentilatorsImpact = (infectionsByRequestedTime) => {
-  // let casesForICUByRequestedTime = 0;
-  // let casesForVentilatorsByRequestedTime = 0;
-  // if (periodType === 'days') {
-  const casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
-  const casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
-  // }
-  // if (periodType === 'weeks') {
-  //   casesForICUByRequestedTime = parseInt((infectionsByRequestedTime * 0.05) / 7);
-  //   casesForVentilatorsByRequestedTime = parseInt((infectionsByRequestedTime * 0.02) / 7);
-  // }
-  // if (periodType === 'months') {
-  //   casesForICUByRequestedTime = parseInt((infectionsByRequestedTime * 0.05) / 30);
-  //   casesForVentilatorsByRequestedTime = parseInt((infectionsByRequestedTime * 0.02) / 30);
-  // }
-  console.log(casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
+const estimateICUandVentilatorsImpact = (infectionsByRequestedTime, periodType) => {
+  let casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
+  let casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
+  if (periodType === 'weeks') {
+    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 7);
+    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 7);
+    // console.log('for weeks', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
+  }
+  if (periodType === 'months') {
+    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 30);
+    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 30);
+    // console.log('for months', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
+  }
   return {
     casesForICUByRequestedTime,
     casesForVentilatorsByRequestedTime
@@ -46,7 +43,7 @@ const estimateICUandVentilatorsImpact = (infectionsByRequestedTime) => {
 
 const estimateImpact = (data, typeOfImpact) => {
   const {
-    reportedCases, totalHospitalBeds
+    reportedCases, totalHospitalBeds, periodType
   } = data;
   let currentlyInfected;
   if (typeOfImpact === 'severe') {
@@ -65,7 +62,7 @@ const estimateImpact = (data, typeOfImpact) => {
   const {
     casesForICUByRequestedTime,
     casesForVentilatorsByRequestedTime
-  } = estimateICUandVentilatorsImpact(infectionsByRequestedTime);
+  } = estimateICUandVentilatorsImpact(infectionsByRequestedTime, periodType);
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
   return {
     currentlyInfected,
@@ -129,6 +126,6 @@ const data3 = {
   totalHospitalBeds: 1380614
 };
 
-console.log(covid19ImpactEstimator(data1));
+// console.log(covid19ImpactEstimator(data1));
 console.log(covid19ImpactEstimator(data2));
 console.log(covid19ImpactEstimator(data3));
