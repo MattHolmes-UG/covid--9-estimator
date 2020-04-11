@@ -19,13 +19,13 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
   const { region, timeToElapse } = data;
   const { avgDailyIncomeInUSD, avgDailyIncomePopulation } = region;
   const totalEstimate = parseInt(infectionCases * avgDailyIncomePopulation * avgDailyIncomeInUSD);
-  console.log('totalEstimate', totalEstimate);
   const dailyLossEstimate = parseInt(totalEstimate / timeToElapse);
   return dailyLossEstimate;
 };
 
 const estimateICUandVentilatorsImpact = (infectionsByRequestedTime, periodType) => {
-  let casesForICUByRequestedTime; let casesForVentilatorsByRequestedTime;
+  let casesForICUByRequestedTime = 0;
+  let casesForVentilatorsByRequestedTime = 0;
   if (periodType === 'days') {
     casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
     casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
@@ -38,6 +38,7 @@ const estimateICUandVentilatorsImpact = (infectionsByRequestedTime, periodType) 
     casesForICUByRequestedTime = parseInt((infectionsByRequestedTime * 0.05) / 30);
     casesForVentilatorsByRequestedTime = parseInt((infectionsByRequestedTime * 0.02) / 30);
   }
+  console.log(casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
   return {
     casesForICUByRequestedTime,
     casesForVentilatorsByRequestedTime
@@ -46,7 +47,7 @@ const estimateICUandVentilatorsImpact = (infectionsByRequestedTime, periodType) 
 
 const estimateImpact = (data, typeOfImpact) => {
   const {
-    reportedCases, totalHospitalBeds
+    reportedCases, totalHospitalBeds, periodType
   } = data;
   let currentlyInfected;
   if (typeOfImpact === 'severe') {
@@ -64,7 +65,7 @@ const estimateImpact = (data, typeOfImpact) => {
   const {
     casesForICUByRequestedTime,
     casesForVentilatorsByRequestedTime
-  } = estimateICUandVentilatorsImpact(infectionsByRequestedTime);
+  } = estimateICUandVentilatorsImpact(infectionsByRequestedTime, periodType);
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
   return {
     currentlyInfected,
@@ -129,5 +130,5 @@ const data3 = {
 };
 
 console.log(covid19ImpactEstimator(data1));
-// console.log(covid19ImpactEstimator(data2));
-// console.log(covid19ImpactEstimator(data3));
+console.log(covid19ImpactEstimator(data2));
+console.log(covid19ImpactEstimator(data3));
