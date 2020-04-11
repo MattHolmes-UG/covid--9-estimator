@@ -1,5 +1,5 @@
 /* eslint-disable radix */
-const estimateInfectionsAfter = (data, currentlyInfected) => {
+const estimatePowerFactor = (data) => {
   const { periodType, timeToElapse } = data;
   let timeInDays = 0;
   if (periodType === 'days') {
@@ -11,8 +11,7 @@ const estimateInfectionsAfter = (data, currentlyInfected) => {
   if (periodType === 'months') {
     timeInDays = timeToElapse * 30;
   }
-  const factor = parseInt(timeInDays / 3);
-  return currentlyInfected * (2 ** factor);
+  return parseInt(timeInDays / 3);
 };
 
 const estimateDailyEconomicImpact = (data, infectionCases) => {
@@ -43,7 +42,8 @@ const estimateImpact = (data, typeOfImpact) => {
   if (typeOfImpact === 'normal') {
     currentlyInfected = reportedCases * 10;
   }
-  const infectionsByRequestedTime = estimateInfectionsAfter(data, currentlyInfected);
+  const factor = estimatePowerFactor(data);
+  const infectionsByRequestedTime = currentlyInfected * (2 ** factor);
   const severeCasesByRequestedTime = parseInt(infectionsByRequestedTime * 0.15);
   const availableBeds = totalHospitalBeds * 0.35;
   const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
