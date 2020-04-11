@@ -1,24 +1,18 @@
 /* eslint-disable radix */
 const estimateInfectionsAfter = (data) => {
   const { periodType, timeToElaspse, reportedCases } = data;
-  let timeInDays;
-  switch (periodType) {
-    case 'days':
-      timeInDays = timeToElaspse;
-      break;
-    case 'weeks':
-      timeInDays = timeToElaspse * 7;
-      break;
-    case 'months':
-      timeInDays = timeToElaspse * 30;
-      break;
-
-    default:
-      timeInDays = timeToElaspse;
-      break;
+  let timeInDays = 0;
+  if (periodType === 'days') {
+    timeInDays = timeToElaspse;
   }
-  const power = parseInt(timeInDays / 3);
-  const numberOfInfections = reportedCases * (2 ** power);
+  if (periodType === 'weeks') {
+    timeInDays = timeToElaspse * 7;
+  }
+  if (periodType === 'days') {
+    timeInDays = timeToElaspse * 30;
+  }
+  const factor = parseInt(timeInDays / 3);
+  const numberOfInfections = reportedCases * (2 ** factor);
   return numberOfInfections;
 };
 
@@ -37,7 +31,8 @@ const estimateImpact = (data, typeOfImpact) => {
   let currentlyInfected;
   if (typeOfImpact === 'severe') {
     currentlyInfected = reportedCases * 50;
-  } else if (typeOfImpact === 'normal') {
+  }
+  if (typeOfImpact === 'normal') {
     currentlyInfected = reportedCases * 10;
   }
   const infectionsByRequestedTime = estimateInfectionsAfter(data);
