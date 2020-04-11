@@ -53,6 +53,7 @@ const estimateImpact = (data, typeOfImpact) => {
     casesForICUByRequestedTime,
     casesForVentilatorsByRequestedTime
   } = estimateICUandVentilatorsImpact(infectionsByRequestedTime);
+  // gradr seems to be working with * 7 and 30
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
   return {
     currentlyInfected,
