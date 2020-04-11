@@ -11,7 +11,7 @@ const estimateInfectionsAfter = (data) => {
   if (periodType === 'days') {
     timeInDays = timeToElapse * 30;
   }
-  const factor = parseInt(timeInDays / 3);
+  const factor = Math.trunc(timeInDays / 3);
   return reportedCases * (2 ** factor);
 };
 
@@ -19,6 +19,7 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
   const { region, timeToElapse } = data;
   const { avgDailyIncomeInUSD, avgDailyIncomePopulation } = region;
   const totalEstimate = parseInt(infectionCases * avgDailyIncomePopulation * avgDailyIncomeInUSD);
+  console.log('totalEstimate', totalEstimate);
   const dailyLossEstimate = parseInt(totalEstimate / timeToElapse);
   return dailyLossEstimate;
 };
@@ -63,4 +64,32 @@ const covid19ImpactEstimator = (data) => {
   };
 };
 
-export default covid19ImpactEstimator;
+const data1 = {
+  region: {
+    name: 'Africa',
+    avgAge: 19.7,
+    avgDailyIncomeInUSD: 5,
+    avgDailyIncomePopulation: 0.71
+  },
+  periodType: 'days',
+  timeToElapse: 58,
+  reportedCases: 674,
+  population: 66622705,
+  totalHospitalBeds: 1380614
+};
+const data2 = {
+  region: {
+    name: 'Africa',
+    avgAge: 19.7,
+    avgDailyIncomeInUSD: 5,
+    avgDailyIncomePopulation: 0.71
+  },
+  periodType: 'months',
+  timeToElapse: 2,
+  reportedCases: 674,
+  population: 66622705,
+  totalHospitalBeds: 1380614
+};
+
+console.log(covid19ImpactEstimator(data1));
+console.log(covid19ImpactEstimator(data2));
