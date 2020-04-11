@@ -24,7 +24,7 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
 
 const estimateImpact = (data, typeOfImpact) => {
   const {
-    reportedCases, totalHospitalBeds, periodType
+    reportedCases, totalHospitalBeds
   } = data;
   let currentlyInfected;
   if (typeOfImpact === 'severe') {
@@ -40,18 +40,17 @@ const estimateImpact = (data, typeOfImpact) => {
   const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
 
   // challenge 3
-  let casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
-  let casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
-  if (periodType === 'weeks') {
-    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 7) * 7;
-    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 7) * 7;
-    // console.log('for weeks', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
-  }
-  if (periodType === 'months') {
-    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 30) * 30;
-    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 30) * 30;
-    // console.log('for months', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
-  }
+
+  // if (periodType === 'weeks') {
+  //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 7) * 7;
+  //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 7) * 7;
+  //   // console.log('for weeks', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
+  // }
+  // if (periodType === 'months') {
+  //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 30) * 30;
+  //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 30) * 30;
+  //   // console.log('for months', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
+  // }
   // gradr seems to be working with * 7 and 30
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
   return {
@@ -59,8 +58,6 @@ const estimateImpact = (data, typeOfImpact) => {
     infectionsByRequestedTime,
     severeCasesByRequestedTime,
     hospitalBedsByRequestedTime,
-    casesForICUByRequestedTime,
-    casesForVentilatorsByRequestedTime,
     dollarsInFlight
   };
 };
@@ -68,6 +65,11 @@ const estimateImpact = (data, typeOfImpact) => {
 const covid19ImpactEstimator = (data) => {
   const impact = estimateImpact(data, 'normal');
   const severeImpact = estimateImpact(data, 'severe');
+
+  impact.casesForICUByRequestedTime = parseInt(impact.infectionsByRequestedTime * 0.05);
+  impact.casesForVentilatorsByRequestedTime = parseInt(impact.infectionsByRequestedTime * 0.02);
+  severeImpact.casesForICUByRequestedTime = parseInt(severeImpact.infectionsByRequestedTime * 0.05);
+  severeImpact.casesForVentilatorsByRequestedTime = parseInt(severeImpact.infectionsByRequestedTime * 0.02);
 
   return {
     data,
