@@ -12,8 +12,7 @@ const estimateInfectionsAfter = (data) => {
     timeInDays = timeToElaspse * 30;
   }
   const factor = parseInt(timeInDays / 3);
-  const numberOfInfections = reportedCases * (2 ** factor);
-  return numberOfInfections;
+  return reportedCases * (2 ** factor);
 };
 
 const estimateDailyEconomicImpact = (data, infectionCases) => {
