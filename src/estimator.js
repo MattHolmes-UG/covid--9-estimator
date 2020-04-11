@@ -8,7 +8,7 @@ const estimateInfectionsAfter = (data) => {
   if (periodType === 'weeks') {
     timeInDays = timeToElapse * 7;
   }
-  if (periodType === 'days') {
+  if (periodType === 'months') {
     timeInDays = timeToElapse * 30;
   }
   const factor = parseInt(timeInDays / 3);

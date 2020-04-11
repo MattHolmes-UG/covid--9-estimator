@@ -3,15 +3,16 @@ const estimateInfectionsAfter = (data) => {
   const { periodType, timeToElapse, reportedCases } = data;
   let timeInDays = 0;
   if (periodType === 'days') {
-    timeInDays = timeToElapse;
+    timeInDays = timeToElapse * 1;
   }
   if (periodType === 'weeks') {
     timeInDays = timeToElapse * 7;
   }
-  if (periodType === 'days') {
+  if (periodType === 'months') {
     timeInDays = timeToElapse * 30;
   }
-  const factor = Math.trunc(timeInDays / 3);
+  const factor = parseInt(timeInDays / 3);
+  console.log('time to elapse', timeToElapse, 'factor', factor, 'time', timeInDays);
   return reportedCases * (2 ** factor);
 };
 
@@ -72,7 +73,7 @@ const data1 = {
     avgDailyIncomePopulation: 0.71
   },
   periodType: 'days',
-  timeToElapse: 58,
+  timeToElapse: 28,
   reportedCases: 674,
   population: 66622705,
   totalHospitalBeds: 1380614
@@ -85,7 +86,20 @@ const data2 = {
     avgDailyIncomePopulation: 0.71
   },
   periodType: 'months',
-  timeToElapse: 2,
+  timeToElapse: 1,
+  reportedCases: 674,
+  population: 66622705,
+  totalHospitalBeds: 1380614
+};
+const data3 = {
+  region: {
+    name: 'Africa',
+    avgAge: 19.7,
+    avgDailyIncomeInUSD: 5,
+    avgDailyIncomePopulation: 0.71
+  },
+  periodType: 'weeks',
+  timeToElapse: 4,
   reportedCases: 674,
   population: 66622705,
   totalHospitalBeds: 1380614
@@ -93,3 +107,4 @@ const data2 = {
 
 console.log(covid19ImpactEstimator(data1));
 console.log(covid19ImpactEstimator(data2));
+console.log(covid19ImpactEstimator(data3));
