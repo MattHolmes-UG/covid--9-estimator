@@ -1,6 +1,6 @@
 /* eslint-disable radix */
-const estimateInfectionsAfter = (data) => {
-  const { periodType, timeToElapse, reportedCases } = data;
+const estimateInfectionsAfter = (data, currentlyInfected) => {
+  const { periodType, timeToElapse } = data;
   let timeInDays = 0;
   if (periodType === 'days') {
     timeInDays = timeToElapse * 1;
@@ -13,7 +13,7 @@ const estimateInfectionsAfter = (data) => {
   }
   const factor = parseInt(timeInDays / 3);
   console.log('time to elapse', timeToElapse, 'factor', factor, 'time', timeInDays);
-  return reportedCases * (2 ** factor);
+  return currentlyInfected * (2 ** factor);
 };
 
 const estimateDailyEconomicImpact = (data, infectionCases) => {
@@ -36,10 +36,10 @@ const estimateImpact = (data, typeOfImpact) => {
   if (typeOfImpact === 'normal') {
     currentlyInfected = reportedCases * 10;
   }
-  const infectionsByRequestedTime = estimateInfectionsAfter(data);
+  const infectionsByRequestedTime = estimateInfectionsAfter(data, currentlyInfected);
   const severeCasesByRequestedTime = parseInt(infectionsByRequestedTime * 0.15);
-  const availableBeds = parseInt(totalHospitalBeds * 0.35);
-  const hospitalBedsByRequestedTime = availableBeds - severeCasesByRequestedTime;
+  const availableBeds = totalHospitalBeds * 0.35;
+  const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
   const casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
   const casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
@@ -106,5 +106,5 @@ const data3 = {
 };
 
 console.log(covid19ImpactEstimator(data1));
-console.log(covid19ImpactEstimator(data2));
-console.log(covid19ImpactEstimator(data3));
+// console.log(covid19ImpactEstimator(data2));
+// console.log(covid19ImpactEstimator(data3));

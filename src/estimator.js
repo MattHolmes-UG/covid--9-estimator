@@ -36,8 +36,8 @@ const estimateImpact = (data, typeOfImpact) => {
   }
   const infectionsByRequestedTime = estimateInfectionsAfter(data, currentlyInfected);
   const severeCasesByRequestedTime = parseInt(infectionsByRequestedTime * 0.15);
-  const availableBeds = parseInt(totalHospitalBeds * 0.35);
-  const hospitalBedsByRequestedTime = availableBeds - severeCasesByRequestedTime;
+  const availableBeds = totalHospitalBeds * 0.35;
+  const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
   const casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
   const casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
