@@ -25,7 +25,7 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
 
 const estimateImpact = (data, typeOfImpact) => {
   const {
-    reportedCases, totalHospitalBeds, periodType
+    reportedCases, totalHospitalBeds
   } = data;
   let currentlyInfected;
   if (typeOfImpact === 'severe') {
