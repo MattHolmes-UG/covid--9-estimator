@@ -59,10 +59,20 @@ const estimateImpact = (data, typeOfImpact) => {
   const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
 
   // challenge 3
-  const {
+  let {
     casesForICUByRequestedTime,
     casesForVentilatorsByRequestedTime
   } = estimateICUandVentilatorsImpact(infectionsByRequestedTime, periodType);
+  if (periodType === 'weeks') {
+    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime * 7);
+    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime * 7);
+    // console.log('for weeks', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
+  }
+  if (periodType === 'months') {
+    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime * 30);
+    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime * 30);
+    // console.log('for months', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
+  }
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
   return {
     currentlyInfected,
