@@ -36,9 +36,9 @@ const estimateImpact = (data, typeOfImpact) => {
   } = data;
   let currentlyInfected;
   if (typeOfImpact === 'severe') {
-    currentlyInfected = reportedCases * 10;
-  } else if (typeOfImpact === 'normal') {
     currentlyInfected = reportedCases * 50;
+  } else if (typeOfImpact === 'normal') {
+    currentlyInfected = reportedCases * 10;
   }
   const infectionsByRequestedTime = estimateInfectionsAfter(data);
   const severeCasesByRequestedTime = parseInt(infectionsByRequestedTime * 0.15);
