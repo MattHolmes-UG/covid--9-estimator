@@ -1,33 +1,5 @@
 /* eslint-disable radix */
-
-const estimateDailyEconomicImpact = (data, infectionCases) => {
-  const { region, timeToElapse } = data;
-  const { avgDailyIncomeInUSD, avgDailyIncomePopulation } = region;
-  const totalEstimate = parseInt(infectionCases * avgDailyIncomePopulation * avgDailyIncomeInUSD);
-  const dailyLossEstimate = parseInt(totalEstimate / timeToElapse);
-  return dailyLossEstimate;
-};
-
-// const estimateICUandVentilatorsImpact = (infectionsByRequestedTime) => {
-//   const casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
-//   const casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
-//   return {
-//     casesForICUByRequestedTime,
-//     casesForVentilatorsByRequestedTime
-//   };
-// };
-
-const estimateImpact = (data, typeOfImpact) => {
-  const {
-    reportedCases, totalHospitalBeds
-  } = data;
-  let currentlyInfected;
-  if (typeOfImpact === 'severe') {
-    currentlyInfected = reportedCases * 50;
-  }
-  if (typeOfImpact === 'normal') {
-    currentlyInfected = reportedCases * 10;
-  }
+const estimatePowerFactor = (data) => {
   const { periodType, timeToElapse } = data;
   let timeInDays = 0;
   if (periodType === 'days') {
@@ -39,15 +11,47 @@ const estimateImpact = (data, typeOfImpact) => {
   if (periodType === 'months') {
     timeInDays = timeToElapse * 30;
   }
-  const factor = parseInt(timeInDays / 3);
+  return parseInt(timeInDays / 3);
+};
+
+const estimateDailyEconomicImpact = (data, infectionCases) => {
+  const { region, timeToElapse } = data;
+  const { avgDailyIncomeInUSD, avgDailyIncomePopulation } = region;
+  const totalEstimate = parseInt(infectionCases * avgDailyIncomePopulation * avgDailyIncomeInUSD);
+  const dailyLossEstimate = parseInt(totalEstimate / timeToElapse);
+  return dailyLossEstimate;
+};
+
+const estimateImpact = (data, typeOfImpact) => {
+  const {
+    reportedCases, totalHospitalBeds, periodType
+  } = data;
+  let currentlyInfected;
+  if (typeOfImpact === 'severe') {
+    currentlyInfected = reportedCases * 50;
+  }
+  if (typeOfImpact === 'normal') {
+    currentlyInfected = reportedCases * 10;
+  }
+  const factor = estimatePowerFactor(data);
   const infectionsByRequestedTime = currentlyInfected * (2 ** factor);
   const severeCasesByRequestedTime = parseInt(infectionsByRequestedTime * 0.15);
   const availableBeds = totalHospitalBeds * 0.35;
   const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
 
   // challenge 3
-  const casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
-  const casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
+  let casesForICUByRequestedTime = parseInt(infectionsByRequestedTime * 0.05);
+  let casesForVentilatorsByRequestedTime = parseInt(infectionsByRequestedTime * 0.02);
+  if (periodType === 'weeks') {
+    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 7);
+    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 7);
+    // console.log('for weeks', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
+  }
+  if (periodType === 'months') {
+    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 30);
+    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 30);
+    // console.log('for months', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
+  }
   // gradr seems to be working with * 7 and 30
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
   return {
