@@ -35,23 +35,29 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+app.use((req, res, next) => {
+  req.session.startTime = new Date().getTime();
+  next();
+});
 
-app.get('/api/v1/on-covid-19/', (req, res) => {
-  if (req.session.output) {
-    log('GET', { path: '/api/v1/on-covid-19/', status: 200, timetaken: 30 });
-    return res.json(req.session.output);
-  }
-  log('GET', { path: '/api/v1/on-covid-19/', status: 200, timetaken: 40 });
+
+app.get('/', (req, res) => {
+  log(req, res);
   return res.sendFile(path.join(__dirname, 'backend/views/dataform.html'));
 });
-app.post('/api/v1/on-covid-19/', (req, res) => {
+app.get('/api/v1/on-covid-19', (req, res) => {
+  console.log(req.url, req.method, res.statusCode);
+  log(req, res);
+  return res.json(req.session.output);
+});
+app.post('/api/v1/on-covid-19', (req, res) => {
   const data = req.body;
   if (!data) {
     return res.send('Please provide data to compute');
   }
   const output = estimator(data);
   req.session.output = output;
-  log('POST', { path: '/api/v1/on-covid-19/', status: 200, timetaken: 20 });
+  log(req, res);
   return res.json(output);
 });
 app.get('/api/v1/on-covid-19/xml', (req, res) => {
@@ -60,7 +66,7 @@ app.get('/api/v1/on-covid-19/xml', (req, res) => {
     const outputXml = new Js2xml('output', output);
     const xmlVersion = outputXml.toString();
     res.setHeader('Content-Type', 'application/xml');
-    log('GET', { path: '/api/v1/on-covid-19/xml', status: 200, timetaken: 20 });
+    log(req, res);
     return res.send(xmlVersion);
   }
   return res.send('Please input data to compute');
@@ -75,13 +81,13 @@ app.post('/api/v1/on-covid-19/xml', (req, res) => {
   const outputXml = new Js2xml('output', req.session.output);
   const xmlVersion = outputXml.toString();
   res.setHeader('Content-Type', 'application/xml');
-  log('POST', { path: '/api/v1/on-covid-19/xml', status: 200, timetaken: 20 });
+  log(req, res);
   return res.send(xmlVersion);
 });
 app.get('/api/v1/on-covid-19/json', (req, res) => {
   const { output } = req.session;
   res.setHeader('Content-Type', 'application/json');
-  log('GET', { path: '/api/v1/on-covid-19/json', status: 200, timetaken: 20 });
+  log(req, res);
   return res.json(output);
 });
 app.post('/api/v1/on-covid-19/json', (req, res) => {
@@ -92,13 +98,13 @@ app.post('/api/v1/on-covid-19/json', (req, res) => {
   const output = estimator(data);
   req.session.output = output;
   res.setHeader('Content-Type', 'application/json');
-  log('POST', { path: '/api/v1/on-covid-19/json', status: 200, timetaken: 20 });
+  log(req, res);
   return res.json(output);
 });
 app.get('/api/v1/on-covid-19/logs', (req, res) => {
   const logFilePath = `${__dirname}/backend/logs.txt`;
   res.setHeader('Content-Type', 'application/plain-text');
-  log('GET', { path: '/api/v1/on-covid-19/logs', status: 200, timetaken: 20 });
+  log(req, res);
   return res.sendFile(logFilePath);
 });
 
