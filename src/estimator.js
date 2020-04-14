@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable radix */
 const estimatePowerFactor = (data) => {
   const { periodType, timeToElapse } = data;
