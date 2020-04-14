@@ -37,7 +37,7 @@ const estimateImpact = (data, typeOfImpact) => {
   const availableBeds = totalHospitalBeds * 0.35;
   const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
 
-  // challenge 3
+  // challenge3
   let casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.05);
   let casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.02);
   if (periodType === 'weeks') {
