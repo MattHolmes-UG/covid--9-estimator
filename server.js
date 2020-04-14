@@ -103,7 +103,7 @@ app.post('/api/v1/on-covid-19/json', (req, res) => {
 });
 app.get('/api/v1/on-covid-19/logs', (req, res) => {
   const logFilePath = `${__dirname}/backend/logs.txt`;
-  res.setHeader('Content-Type', 'application/plain-text');
+  res.setHeader('Content-Type', 'text/plain');
   log(req, res);
   return res.sendFile(logFilePath);
 });
