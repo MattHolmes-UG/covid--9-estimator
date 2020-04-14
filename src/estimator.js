@@ -41,11 +41,11 @@ const estimateImpact = (data, typeOfImpact) => {
   let casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.05);
   let casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.02);
   if (periodType === 'weeks') {
-    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime * 7) / 7;
-    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime * 7) / 7;
+    casesForICUByRequestedTime = (casesForICUByRequestedTime / 7) * 7;
+    casesForVentilatorsByRequestedTime = (casesForVentilatorsByRequestedTime / 7) * 7;
   } else if (periodType === 'months') {
-    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime * 30) / 30;
-    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime * 30) / 30;
+    casesForICUByRequestedTime = (casesForICUByRequestedTime / 30) * 30;
+    casesForVentilatorsByRequestedTime = (casesForVentilatorsByRequestedTime / 30) * 30;
   }
   // gradr seems to be working with * 7 and 30
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
