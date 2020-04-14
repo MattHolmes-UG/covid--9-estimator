@@ -24,7 +24,7 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
 
 const estimateImpact = (data, typeOfImpact) => {
   const {
-    reportedCases, totalHospitalBeds// , periodType
+    reportedCases, totalHospitalBeds, timeToElapse// , periodType
   } = data;
   let currentlyInfected;
   if (typeOfImpact === 'severe') {
@@ -40,8 +40,8 @@ const estimateImpact = (data, typeOfImpact) => {
   const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
 
   // challenge 3
-  const casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.05);
-  const casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.02);
+  const casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** parseInt(timeToElapse / 3)) * 0.05);
+  const casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** parseInt(timeToElapse / 3)) * 0.02);
   // if (periodType === 'weeks') {
   //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 7) * 7;
   //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 7) * 7;
