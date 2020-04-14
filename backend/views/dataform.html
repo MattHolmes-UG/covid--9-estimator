@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Covid-19-Estimator</title>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <style>
+    body {
+      background-color: #25274d;
+    }
+
+    .contact {
+      padding: 4%;
+      height: 400px;
+    }
+
+    .col-md-3 {
+      background: #ff9b00;
+      padding: 4%;
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+    }
+
+    .contact-info {
+      margin-top: 10%;
+    }
+
+    .contact-info img {
+      margin-bottom: 15%;
+    }
+
+    .contact-info h2 {
+      margin-bottom: 10%;
+    }
+
+    .col-md-9 {
+      background: #fff;
+      padding: 3%;
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
+
+    .contact-form select {
+      width: 78.5%;
+      margin-left: 2.5%;
+    }
+
+    .contact-form label {
+      font-weight: 400;
+    }
+
+    .contact-form button {
+      background: #25274d;
+      color: #fff;
+      font-weight: 600;
+      width: 25%;
+    }
+
+    .contact-form button:focus {
+      box-shadow: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container contact">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="contact-info">
+          <img src="https://image.ibb.co/kUASdV/contact-image.png" alt="image" />
+          <h2>Covid-19 Estimator</h2>
+          <h4>Information is Key!</h4>
+          <p>We are happy to help you get a better view of the pandemic situation. Just fill in the details and let us
+            do
+            the
+            rest.
+          </p>
+        </div>
+      </div>
+      <form class="col-md-9" method="POST" action="/api/v1/on-covid-19/">
+        <div class="contact-form">
+          <div class="form-group">
+            <label class="control-label col-sm-2 col-md-8" for="population">Population:</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="population" placeholder="Size of population"
+                name="population">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 col-md-8" for="reportedCases">Reported Cases:</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="reportedCases" placeholder="Amount of reported cases"
+                name="reportedCases">
+            </div>
+          </div>
+          <div class="form-group">
+            <select class="custom-select col-sm-10 form-control" name="periodType">
+              <option selected disabled aria-disabled="true">Choose the period type</option>
+              <option value="days">Days</option>
+              <option value="weeks">Weeks</option>
+              <option value="months">Months</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 col-md-8" for="timeToElapse">Time to calculate for:</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="timeToElapse" placeholder="Time into the future"
+                name="timeToElapse">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 col-md-8" for="totalHospitalBeds">Total Hospital Beds Available:</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="totalHospitalBeds"
+                placeholder="Number of total Hospital Beds" name="totalHospitalBeds">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-default">Submit</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+</body>
+
+</html>
