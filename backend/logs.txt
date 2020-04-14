@@ -1,2 +1,0 @@
-GET		/api/v1/on-covid-19/		200		40ms
-GET		/api/v1/on-covid-19/		200		40ms

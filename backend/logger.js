@@ -7,7 +7,6 @@ const log = (action, data) => {
     if (err || content === undefined) {
       console.error(err);
     } else {
-      console.log(content);
       const contentToAdd = `${action}\t\t${data.path}\t\t${data.status}\t\t${data.timetaken}ms\n`;
       const newContent = content + contentToAdd;
       fs.writeFile(filePath, newContent, (writeErr) => {

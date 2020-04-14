@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const js2xml = require('js2xml');
+const Js2xml = require('js2xml').Js2Xml;
 const session = require('express-session');
 const path = require('path');
 const log = require('./backend/logger');
@@ -31,52 +31,68 @@ app.options('*', (req, res) => {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(session({
-  secret: process.env.SECRETKEY, // Remember to add these
+  secret: 'testsecretforapp', // Remember to add these
   resave: false,
   saveUninitialized: false
 }));
 
 app.get('/api/v1/on-covid-19/', (req, res) => {
   log('GET', { path: '/api/v1/on-covid-19/', status: 200, timetaken: 40 });
-  res.sendFile(path.join(`${__dirname}backend/views/`));
+  if (req.session.output) {
+    return res.json(req.session.output);
+  }
+  return res.sendFile(path.join(__dirname, 'backend/views/dataform.html'));
 });
 app.post('/api/v1/on-covid-19/', (req, res) => {
-  let { data } = req.body;
+  const data = req.body;
   if (!data) {
-    data = {
-      region: {
-        name: 'Africa',
-        avgAge: 19.7,
-        avgDailyIncomeInUSD: 5,
-        avgDailyIncomePopulation: 0.71
-      },
-      periodType: 'days',
-      timeToElapse: 58,
-      reportedCases: 674,
-      population: 66622705,
-      totalHospitalBeds: 1380614
-    };
+    return res.send('Please provide data to compute');
   }
   const output = estimator(data);
   req.session.output = output;
-  console.log(output);
-  res.json(output);
+  return res.json(output);
 });
 app.get('/api/v1/on-covid-19/xml', (req, res) => {
-  const outputXml = js2xml('output', req.session.output);
+  const { output } = req.session;
+  if (output) {
+    const outputXml = new Js2xml('output', output);
+    const xmlVersion = outputXml.toString();
+    res.setHeader('Content-Type', 'application/xml');
+    return res.send(xmlVersion);
+  }
+  return res.send('Please input data to compute');
+});
+app.post('/api/v1/on-covid-19/xml', (req, res) => {
+  const data = req.body;
+  if (!data) {
+    return res.send('Please provide data to compute');
+  }
+  const output = estimator(data);
+  req.session.output = output;
+  const outputXml = new Js2xml('output', req.session.output);
   const xmlVersion = outputXml.toString();
   res.setHeader('Content-Type', 'application/xml');
-  res.send(xmlVersion);
+  return res.send(xmlVersion);
 });
 app.get('/api/v1/on-covid-19/json', (req, res) => {
   const { output } = req.session;
   res.setHeader('Content-Type', 'application/json');
-  res.json(output);
+  return res.json(output);
+});
+app.post('/api/v1/on-covid-19/json', (req, res) => {
+  const data = req.body;
+  if (!data) {
+    return res.send('Please provide data to compute');
+  }
+  const output = estimator(data);
+  req.session.output = output;
+  res.setHeader('Content-Type', 'application/json');
+  return res.json(output);
 });
 app.get('/api/v1/on-covid-19/logs', (req, res) => {
   const logFilePath = `${__dirname}/backend/logs.txt`;
   res.setHeader('Content-Type', 'application/plain-text');
-  res.sendFile(logFilePath);
+  return res.sendFile(logFilePath);
 });
 
 app.listen(port, () => {
