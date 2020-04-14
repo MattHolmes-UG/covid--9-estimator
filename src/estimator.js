@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 /* eslint-disable radix */
 const estimatePowerFactor = (data) => {
   const { periodType, timeToElapse } = data;
@@ -25,7 +24,7 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
 
 const estimateImpact = (data, typeOfImpact) => {
   const {
-    reportedCases, totalHospitalBeds
+    reportedCases, totalHospitalBeds// , periodType
   } = data;
   let currentlyInfected;
   if (typeOfImpact === 'severe') {
@@ -41,7 +40,8 @@ const estimateImpact = (data, typeOfImpact) => {
   const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
 
   // challenge 3
-
+  const casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.05);
+  const casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.02);
   // if (periodType === 'weeks') {
   //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 7) * 7;
   //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 7) * 7;
@@ -59,6 +59,8 @@ const estimateImpact = (data, typeOfImpact) => {
     infectionsByRequestedTime,
     severeCasesByRequestedTime,
     hospitalBedsByRequestedTime,
+    casesForICUByRequestedTime,
+    casesForVentilatorsByRequestedTime,
     dollarsInFlight
   };
 };
@@ -66,11 +68,6 @@ const estimateImpact = (data, typeOfImpact) => {
 const covid19ImpactEstimator = (data) => {
   const impact = estimateImpact(data, 'normal');
   const severeImpact = estimateImpact(data, 'severe');
-
-  impact.casesForICUByRequestedTime = parseInt(impact.infectionsByRequestedTime * 0.05);
-  impact.casesForVentilatorsByRequestedTime = parseInt(impact.infectionsByRequestedTime * 0.02);
-  severeImpact.casesForICUByRequestedTime = parseInt(severeImpact.infectionsByRequestedTime * 0.05);
-  severeImpact.casesForVentilatorsByRequestedTime = parseInt(severeImpact.infectionsByRequestedTime * 0.02);
 
   return {
     data,
