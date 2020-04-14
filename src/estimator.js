@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 /* eslint-disable radix */
 const estimatePowerFactor = (data) => {
   const { periodType, timeToElapse } = data;
@@ -25,7 +24,7 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
 
 const estimateImpact = (data, typeOfImpact) => {
   const {
-    reportedCases, totalHospitalBeds, timeToElapse// , periodType
+    reportedCases, totalHospitalBeds// , periodType
   } = data;
   let currentlyInfected;
   if (typeOfImpact === 'severe') {
@@ -41,15 +40,17 @@ const estimateImpact = (data, typeOfImpact) => {
   const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
 
   // challenge 3
-  const casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** parseInt(timeToElapse / 3)) * 0.05);
-  const casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** parseInt(timeToElapse / 3)) * 0.02);
+  const casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.05);
+  const casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.02);
   // if (periodType === 'weeks') {
   //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 7) * 7;
   //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 7) * 7;
+  //   // console.log('for weeks', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
   // }
   // if (periodType === 'months') {
   //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 30) * 30;
   //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 30) * 30;
+  //   // console.log('for months', casesForICUByRequestedTime, casesForVentilatorsByRequestedTime);
   // }
   // gradr seems to be working with * 7 and 30
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
