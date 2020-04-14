@@ -13,10 +13,18 @@ const estimatePowerFactor = (data) => {
 };
 
 const estimateDailyEconomicImpact = (data, infectionCases) => {
-  const { region, timeToElapse } = data;
+  const { region, timeToElapse, periodType } = data;
   const { avgDailyIncomeInUSD, avgDailyIncomePopulation } = region;
   const totalEstimate = parseInt(infectionCases * avgDailyIncomePopulation * avgDailyIncomeInUSD);
-  const dailyLossEstimate = parseInt(totalEstimate / timeToElapse);
+  let timeInDays = 0;
+  if (periodType === 'days') {
+    timeInDays = timeToElapse;
+  } else if (periodType === 'weeks') {
+    timeInDays = timeToElapse * 7;
+  } else if (periodType === 'months') {
+    timeInDays = timeToElapse * 30;
+  }
+  const dailyLossEstimate = parseInt(totalEstimate / timeInDays);
   return dailyLossEstimate;
 };
 
@@ -37,15 +45,15 @@ const estimateImpact = (data, typeOfImpact) => {
   const availableBeds = totalHospitalBeds * 0.35;
   const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
 
-  // challenge3
-  // let casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.05);
-  // let casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.02);
+  // challenge 3
+  const casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.05);
+  const casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.02);
   // if (periodType === 'weeks') {
-  //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 1) * 1;
-  //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 1) * 1;
+  //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 7) * 7;
+  //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 7) * 7;
   // } else if (periodType === 'months') {
-  //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 1) * 1;
-  //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 1) * 1;
+  //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 30) * 30;
+  //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 30) * 30;
   // }
   // gradr seems to be working with * 7 and 30
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
@@ -54,8 +62,8 @@ const estimateImpact = (data, typeOfImpact) => {
     infectionsByRequestedTime,
     severeCasesByRequestedTime,
     hospitalBedsByRequestedTime,
-    casesForICUByRequestedTime: parseInt(currentlyInfected * (2 ** factor) * 0.05),
-    casesForVentilatorsByRequestedTime: parseInt(currentlyInfected * (2 ** factor) * 0.02),
+    casesForICUByRequestedTime,
+    casesForVentilatorsByRequestedTime,
     dollarsInFlight
   };
 };
