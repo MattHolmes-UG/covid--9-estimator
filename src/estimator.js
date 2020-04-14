@@ -22,7 +22,7 @@ const estimateDailyEconomicImpact = (data, infectionCases) => {
 
 const estimateImpact = (data, typeOfImpact) => {
   const {
-    reportedCases, totalHospitalBeds, periodType
+    reportedCases, totalHospitalBeds// , periodType
   } = data;
   let currentlyInfected;
   if (typeOfImpact === 'severe') {
@@ -38,15 +38,15 @@ const estimateImpact = (data, typeOfImpact) => {
   const hospitalBedsByRequestedTime = parseInt(availableBeds - severeCasesByRequestedTime);
 
   // challenge3
-  let casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.05);
-  let casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.02);
-  if (periodType === 'weeks') {
-    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 1) * 1;
-    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 1) * 1;
-  } else if (periodType === 'months') {
-    casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 1) * 1;
-    casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 1) * 1;
-  }
+  // let casesForICUByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.05);
+  // let casesForVentilatorsByRequestedTime = parseInt(currentlyInfected * (2 ** factor) * 0.02);
+  // if (periodType === 'weeks') {
+  //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 1) * 1;
+  //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 1) * 1;
+  // } else if (periodType === 'months') {
+  //   casesForICUByRequestedTime = parseInt(casesForICUByRequestedTime / 1) * 1;
+  //   casesForVentilatorsByRequestedTime = parseInt(casesForVentilatorsByRequestedTime / 1) * 1;
+  // }
   // gradr seems to be working with * 7 and 30
   const dollarsInFlight = estimateDailyEconomicImpact(data, infectionsByRequestedTime);
   return {
@@ -54,8 +54,8 @@ const estimateImpact = (data, typeOfImpact) => {
     infectionsByRequestedTime,
     severeCasesByRequestedTime,
     hospitalBedsByRequestedTime,
-    casesForICUByRequestedTime,
-    casesForVentilatorsByRequestedTime,
+    casesForICUByRequestedTime: parseInt(currentlyInfected * (2 ** factor) * 0.05),
+    casesForVentilatorsByRequestedTime: parseInt(currentlyInfected * (2 ** factor) * 0.02),
     dollarsInFlight
   };
 };
